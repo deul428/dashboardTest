@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import matplotlib as mpl
 import urllib.request
+import platform
 
 
 # 페이지 설정이 가장 먼저 와야 함
@@ -106,7 +107,6 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 import matplotlib as mpl
 import requests
-import platform
 import subprocess
 
 # 그래프 다운로드 기능 추가
