@@ -43,31 +43,31 @@ brand_mapping = {
 }
 
 # 한글 폰트 설정 함수
-def setup_korean_font():
-    try:
-        # 폰트 저장 경로 설정
-        font_dir = '/tmp/fonts/'
-        font_path = os.path.join(font_dir, 'NanumGothic.ttf')
-        font_url = 'https://raw.githubusercontent.com/kairess/better-data-visualization/master/NanumGothic.ttf'
+# def setup_korean_font():
+#     try:
+#         # 폰트 저장 경로 설정
+#         font_dir = '/tmp/fonts/'
+#         font_path = os.path.join(font_dir, 'NanumGothic.ttf')
+#         font_url = 'https://raw.githubusercontent.com/kairess/better-data-visualization/master/NanumGothic.ttf'
 
-        # 폴더가 없으면 생성
-        os.makedirs(font_dir, exist_ok=True)
+#         # 폴더가 없으면 생성
+#         os.makedirs(font_dir, exist_ok=True)
 
-        # 폰트가 없으면 다운로드
-        if not os.path.exists(font_path):
-            urllib.request.urlretrieve(font_url, font_path)
-            st.write("✅ 나눔고딕 폰트 다운로드 완료")
+#         # 폰트가 없으면 다운로드
+#         if not os.path.exists(font_path):
+#             urllib.request.urlretrieve(font_url, font_path)
+#             st.write("✅ 나눔고딕 폰트 다운로드 완료")
 
-        # matplotlib에 폰트 등록
-        fm.fontManager.addfont(font_path)
-        plt.rcParams['font.family'] = 'NanumGothic'
-        plt.rcParams['axes.unicode_minus'] = False
+#         # matplotlib에 폰트 등록
+#         fm.fontManager.addfont(font_path)
+#         plt.rcParams['font.family'] = 'NanumGothic'
+#         plt.rcParams['axes.unicode_minus'] = False
 
-        return font_path
+#         return font_path
 
-    except Exception as e:
-        st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
-        return None
+#     except Exception as e:
+#         st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
+#         return None
 
 def setup_korean_font_test(): 
     system = platform.system()
