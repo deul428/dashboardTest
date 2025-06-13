@@ -83,12 +83,6 @@ def setup_korean_font_test():
     mpl.rcParams["axes.unicode_minus"] = False  # 마이너스 깨짐 방지
 
 
-# 폰트 설정 실행
-font_path = setup_korean_font_test()
-fig, ax = plt.subplots()
-ax.set_title("한글 테스트: 지역별 고장 건수")
-ax.plot([1, 2, 3], [4, 5, 6])
-st.pyplot(fig)
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -111,6 +105,20 @@ from sklearn.ensemble import RandomForestClassifier
 import matplotlib as mpl
 import requests
 import subprocess
+
+# 폰트 설정 실행
+font_path = setup_korean_font_test()
+
+# fig, ax = plt.subplots()
+# ax.set_title("한글 테스트: 지역별 고장 건수")
+# ax.plot([1, 2, 3], [4, 5, 6])
+# st.pyplot(fig)
+
+
+fig, ax = plt.subplots()
+ax.set_title("English Title Only")
+ax.plot([1, 2, 3], [4, 5, 6])
+st.pyplot(fig)
 
 # 그래프 다운로드 기능 추가
 def get_image_download_link(fig, filename, text):
