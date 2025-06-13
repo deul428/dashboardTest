@@ -70,18 +70,31 @@ def setup_korean_font():
         return None
 
 def setup_korean_font_test(): 
-    # ✅ 운영체제별 기본 한글 폰트 자동 설정
     system = platform.system()
+
+    # 기본 설정
+    font_path = None
 
     if system == "Windows":
         mpl.rcParams["font.family"] = "Malgun Gothic"
-    elif system == "Darwin":  # macOS
+    elif system == "Darwin":
         mpl.rcParams["font.family"] = "AppleGothic"
-    else:  # Linux (예: Streamlit Cloud)
-        mpl.rcParams["font.family"] = "DejaVu Sans"  # 기본 포함 폰트
+    else:  # Linux (ex. Streamlit Cloud)
+        # 다운로드용 폰트 경로
+        font_dir = "/tmp/fonts"
+        font_path = os.path.join(font_dir, "NanumGothic.ttf")
+        font_url = "https://raw.githubusercontent.com/kairess/better-data-visualization/master/NanumGothic.ttf"
 
-    mpl.rcParams["axes.unicode_minus"] = False  # 마이너스 깨짐 방지
+        os.makedirs(font_dir, exist_ok=True)
 
+        if not os.path.exists(font_path):
+            urllib.request.urlretrieve(font_url, font_path)
+
+        fm.fontManager.addfont(font_path)
+        mpl.rcParams["font.family"] = "NanumGothic"
+
+    mpl.rcParams["axes.unicode_minus"] = False
+    return font_path
 
 import pandas as pd
 import numpy as np
@@ -109,10 +122,14 @@ import subprocess
 # 폰트 설정 실행
 font_path = setup_korean_font_test()
 
-# fig, ax = plt.subplots()
-# ax.set_title("한글 테스트: 지역별 고장 건수")
-# ax.plot([1, 2, 3], [4, 5, 6])
-# st.pyplot(fig)
+# 이후 코드에서 사용 가능
+if font_path and os.path.exists(font_path):
+    fm.fontManager.addfont(font_path)
+
+fig, ax = plt.subplots()
+ax.set_title("한글 테스트: 지역별 고장 건수")
+ax.plot([1, 2, 3], [4, 5, 6])
+st.pyplot(fig)
 
 
 fig, ax = plt.subplots()
