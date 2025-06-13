@@ -104,6 +104,31 @@ def setup_korean_font_test(dummy_mode=True):
     except Exception as e:
         st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
         return "/tmp/ERROR.ttf"  # 오류 시에도 더미 반환
+    
+    
+
+def set_cross_platform_korean_font():
+    system = platform.system()
+
+    if system == "Windows":
+        mpl.rcParams["font.family"] = "Malgun Gothic"
+    elif system == "Darwin":
+        mpl.rcParams["font.family"] = "AppleGothic"
+    else:  # Linux / Streamlit Cloud
+        # 가능한 폰트 중 하나 자동 선택
+        fallback_fonts = ["Noto Sans CJK KR", "NanumGothic", "Droid Sans Fallback", "UnDotum", "Liberation Sans"]
+        available_fonts = set(f.name for f in fm.fontManager.ttflist)
+        matched = next((font for font in fallback_fonts if font in available_fonts), None)
+
+        if matched:
+            mpl.rcParams["font.family"] = matched
+            st.info(f"✅ 시스템에서 발견된 한글 폰트 사용: {matched}")
+        else:
+            mpl.rcParams["font.family"] = "sans-serif"
+            st.warning("⚠️ 한글 폰트가 시스템에 없어 기본 폰트로 대체됩니다. (한글 깨질 수 있음)")
+
+    mpl.rcParams["axes.unicode_minus"] = False
+    
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -128,7 +153,7 @@ import requests
 import subprocess
 
 # 폰트 설정 실행
-font_path = setup_korean_font_test()
+font_path = set_cross_platform_korean_font()
 
 # 이후 코드에서 사용 가능
 if font_path and os.path.exists(font_path):
