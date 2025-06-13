@@ -69,34 +69,41 @@ brand_mapping = {
 #         st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
 #         return None
 
-def setup_korean_font_test(): 
+
+def setup_korean_font_test(dummy_mode=True):
     system = platform.system()
+    font_path = None  # 기본값
 
-    # 기본 설정
-    font_path = None
+    try:
+        if system == "Windows":
+            mpl.rcParams["font.family"] = "Malgun Gothic"
+        elif system == "Darwin":
+            mpl.rcParams["font.family"] = "AppleGothic"
+        else:  # Linux (Streamlit Cloud 등)
+            if dummy_mode:
+                st.warning("📎 더미 폰트 경로 사용 중 (폰트 다운로드 생략됨)")
+                font_path = "/tmp/DUMMY.ttf"  # 더미 값 반환
+                mpl.rcParams["font.family"] = "DejaVu Sans"
+            else:
+                font_dir = "/tmp/fonts"
+                font_path = os.path.join(font_dir, "NanumGothic.ttf")
+                font_url = "https://github.com/naver/nanumfont/blob/master/TTF/NanumGothic.ttf?raw=true"
 
-    if system == "Windows":
-        mpl.rcParams["font.family"] = "Malgun Gothic"
-    elif system == "Darwin":
-        mpl.rcParams["font.family"] = "AppleGothic"
-    else:  # Linux (ex. Streamlit Cloud)
-        # 다운로드용 폰트 경로
-        font_dir = "/tmp/fonts"
-        font_path = os.path.join(font_dir, "NanumGothic.ttf")
-        # font_url = "https://github.com/naver/nanumfont/blob/master/TTF/NanumGothic.ttf?raw=true"
-        font_url = "https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/NanumSquareR.woff"
+                os.makedirs(font_dir, exist_ok=True)
 
-        os.makedirs(font_dir, exist_ok=True)
+                if not os.path.exists(font_path):
+                    urllib.request.urlretrieve(font_url, font_path)
+                    st.info("폰트 다운로드 완료")
 
-        if not os.path.exists(font_path):
-            urllib.request.urlretrieve(font_url, font_path)
+                fm.fontManager.addfont(font_path)
+                mpl.rcParams["font.family"] = "NanumGothic"
 
-        fm.fontManager.addfont(font_path)
-        mpl.rcParams["font.family"] = "NanumGothic"
+        mpl.rcParams["axes.unicode_minus"] = False
+        return font_path
 
-    mpl.rcParams["axes.unicode_minus"] = False
-    return font_path
-
+    except Exception as e:
+        st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
+        return "/tmp/ERROR.ttf"  # 오류 시에도 더미 반환
 import pandas as pd
 import numpy as np
 import seaborn as sns
