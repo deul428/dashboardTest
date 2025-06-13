@@ -6,7 +6,6 @@ import matplotlib as mpl
 import urllib.request
 import platform
 
-
 # 페이지 설정이 가장 먼저 와야 함
 st.set_page_config(
     page_title="산업장비 AS 분석 대시보드",
@@ -49,7 +48,8 @@ def setup_korean_font_test():
     if os.path.exists(font_path):
         fm.fontManager.addfont(font_path)
         mpl.rcParams["font.family"] = "NanumGothic"
-        st.info("✅ NanumGothic.ttf 폰트를 직접 등록하여 사용합니다.")
+        # 디버깅용
+        # st.info("✅ NanumGothic.ttf 폰트를 직접 등록하여 사용합니다.")
         return font_path
 
     # 2. 시스템별 fallback (폰트가 없을 경우)
@@ -65,9 +65,12 @@ def setup_korean_font_test():
 
         if matched:
             mpl.rcParams["font.family"] = matched
-            st.info(f"✅ 시스템에서 발견된 한글 폰트 사용: {matched}")
+            # 디버깅용
+            # st.info(f"✅ 시스템에서 발견된 한글 폰트 사용: {matched}")
         else:
             mpl.rcParams["font.family"] = "sans-serif"
+            
+            # 디버깅용
             st.warning("⚠️ 한글 폰트가 시스템에 없어 기본 폰트로 대체됩니다. (한글 깨질 수 있음)")
 
     mpl.rcParams["axes.unicode_minus"] = False
@@ -111,39 +114,10 @@ def get_image_download_link(fig, filename, text):
     b64 = base64.b64encode(buf.getvalue()).decode()
     href = f'<a href="data:image/png;base64,{b64}" download="{filename}"> {text}</a>'
     return href
-
-# def create_figure_with_korean(figsize=(10, 6), dpi=300):
-#     """OS 환경에 따라 한글 폰트를 강제 적용한 figure 생성 함수"""
-#     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
-
-#     system = platform.system() 
-#     if system == "Windows":
-#         mpl.rcParams["font.family"] = "Malgun Gothic"
-#     elif system == "Darwin":
-#         mpl.rcParams["font.family"] = "AppleGothic"
-#     else:  # Linux / Streamlit Cloud
-#         fallback_fonts = ["Noto Sans CJK KR", "NanumGothic", "Droid Sans Fallback", "UnDotum", "Liberation Sans", "DejaVu Sans"]
-#         available_fonts = set(f.name for f in fm.fontManager.ttflist)
-#         matched = next((font for font in fallback_fonts if font in available_fonts), None)
-
-#         if matched:
-#             mpl.rcParams["font.family"] = matched
-#         else:
-#             mpl.rcParams["font.family"] = "sans-serif"  # fallback
-#             print("⚠️ 경고: 한글 폰트를 찾을 수 없어 sans-serif로 대체합니다.")
-
-#     mpl.rcParams["axes.unicode_minus"] = False
-
-#     return fig, ax
+  
 def create_figure_with_korean(figsize=(10, 6), dpi=300):
     """한글 폰트가 적용된 그림 객체 생성""" 
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
-    
-    # # 그림마다 폰트 설정 적용
-    # if font_path and os.path.exists(font_path):
-    #     plt.rcParams['font.family'] = 'NanumGothic'
-    #     plt.rcParams['axes.unicode_minus'] = False
-    
     return fig, ax
 
 # 메뉴별 색상 테마 설정
