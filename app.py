@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="산업장비 AS 분석 대시보드",
     layout="wide"
 )
-
+ 
 # 브랜드 약자와 전체 이름 매핑 딕셔너리
 brand_mapping = {
     'BY': 'BYD',
