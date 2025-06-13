@@ -83,7 +83,8 @@ def setup_korean_font_test():
         # 다운로드용 폰트 경로
         font_dir = "/tmp/fonts"
         font_path = os.path.join(font_dir, "NanumGothic.ttf")
-        font_url = "https://github.com/naver/nanumfont/blob/master/TTF/NanumGothic.ttf?raw=true"
+        # font_url = "https://github.com/naver/nanumfont/blob/master/TTF/NanumGothic.ttf?raw=true"
+        font_url = "https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/NanumSquareR.woff"
 
         os.makedirs(font_dir, exist_ok=True)
 
