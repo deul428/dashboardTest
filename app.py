@@ -3,6 +3,8 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import matplotlib as mpl
+import urllib.request
+
 
 # 페이지 설정이 가장 먼저 와야 함
 st.set_page_config(
@@ -39,37 +41,34 @@ brand_mapping = {
     'TY': '도요타'
 }
 
-# 한글 폰트 설정 함수
-def setup_korean_font():
-    """한글 폰트 설정을 위한 함수"""
-    try:
-        # Streamlit 클라우드에 나눔 폰트 설치
-        font_dir = '/tmp/fonts/'
-        if not os.path.exists(font_dir):
-            os.makedirs(font_dir)
-        
-        # 폰트 다운로드 (파일이 없을 경우)
-        font_path = '/tmp/fonts/NanumGothic.ttf'
-        if not os.path.exists(font_path):
-            os.system('wget -q https://raw.githubusercontent.com/kairess/better-data-visualization/master/NanumGothic.ttf -O ' + font_path)
-            st.write("폰트 다운로드 완료")
-        
-        # 폰트 매니저에 폰트 추가
-        font_files = fm.findSystemFonts(fontpaths=[font_dir])
-        for font_file in font_files:
-            fm.fontManager.addfont(font_file)
-        
-        # matplotlib 폰트 설정
-        plt.rcParams['font.family'] = 'NanumGothic'
-        plt.rcParams['axes.unicode_minus'] = False
-        
-        return font_path
-    except Exception as e:
-        st.error(f"폰트 설정 중 오류 발생: {str(e)}")
-        return None
+# # 한글 폰트 설정 함수
+# def setup_korean_font():
+#     try:
+#         # 폰트 저장 경로 설정
+#         font_dir = '/tmp/fonts/'
+#         font_path = os.path.join(font_dir, 'NanumGothic.ttf')
+#         font_url = 'https://raw.githubusercontent.com/kairess/better-data-visualization/master/NanumGothic.ttf'
 
-# 폰트 설정 실행
-font_path = setup_korean_font()
+#         # 폴더가 없으면 생성
+#         os.makedirs(font_dir, exist_ok=True)
+
+#         # 폰트가 없으면 다운로드
+#         if not os.path.exists(font_path):
+#             urllib.request.urlretrieve(font_url, font_path)
+#             st.write("✅ 나눔고딕 폰트 다운로드 완료")
+
+#         # matplotlib에 폰트 등록
+#         fm.fontManager.addfont(font_path)
+#         plt.rcParams['font.family'] = 'NanumGothic'
+#         plt.rcParams['axes.unicode_minus'] = False
+
+#         return font_path
+
+#     except Exception as e:
+#         st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
+#         return None
+# # 폰트 설정 실행
+# font_path = setup_korean_font()
 
 import pandas as pd
 import numpy as np
