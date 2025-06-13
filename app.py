@@ -181,22 +181,46 @@ def get_image_download_link(fig, filename, text):
     return href
 
 def create_figure_with_korean(figsize=(10, 6), dpi=300):
-    """한글 폰트가 적용된 그림 객체 생성"""
+    """OS 환경에 따라 한글 폰트를 강제 적용한 figure 생성 함수"""
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
 
-    # ✅ 항상 설정 (font_path 존재 여부와 무관하게)
-    plt.rcParams['font.family'] = mpl.rcParams['font.family']
-    plt.rcParams['axes.unicode_minus'] = False
+    system = platform.system()
+
+    if system == "Windows":
+        mpl.rcParams["font.family"] = "Malgun Gothic"
+    elif system == "Darwin":
+        mpl.rcParams["font.family"] = "AppleGothic"
+    else:  # Linux / Streamlit Cloud
+        fallback_fonts = ["Noto Sans CJK KR", "NanumGothic", "Droid Sans Fallback", "UnDotum", "Liberation Sans", "DejaVu Sans"]
+        available_fonts = set(f.name for f in fm.fontManager.ttflist)
+        matched = next((font for font in fallback_fonts if font in available_fonts), None)
+
+        if matched:
+            mpl.rcParams["font.family"] = matched
+        else:
+            mpl.rcParams["font.family"] = "sans-serif"  # fallback
+            print("⚠️ 경고: 한글 폰트를 찾을 수 없어 sans-serif로 대체합니다.")
+
+    mpl.rcParams["axes.unicode_minus"] = False
 
     return fig, ax
-    # fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+# def create_figure_with_korean(figsize=(10, 6), dpi=300):
+#     """한글 폰트가 적용된 그림 객체 생성"""
+#     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+
+#     # ✅ 항상 설정 (font_path 존재 여부와 무관하게)
+#     plt.rcParams['font.family'] = mpl.rcParams['font.family']
+#     plt.rcParams['axes.unicode_minus'] = False
+
+#     return fig, ax
+#     # fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     
-    # # 그림마다 폰트 설정 적용
-    # if font_path and os.path.exists(font_path):
-    #     plt.rcParams['font.family'] = 'NanumGothic'
-    #     plt.rcParams['axes.unicode_minus'] = False
+#     # # 그림마다 폰트 설정 적용
+#     # if font_path and os.path.exists(font_path):
+#     #     plt.rcParams['font.family'] = 'NanumGothic'
+#     #     plt.rcParams['axes.unicode_minus'] = False
     
-    # return fig, ax
+#     # return fig, ax
 
 # 메뉴별 색상 테마 설정
 color_themes = {
