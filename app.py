@@ -67,8 +67,37 @@ def setup_korean_font():
     except Exception as e:
         st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
         return None
+
+def setup_korean_font_test():
+    try:
+        # OS에 따라 폰트 저장 위치 설정
+        if platform.system() == "Windows":
+            font_dir = os.path.join(os.getcwd(), "fonts")
+        else:
+            font_dir = "/tmp/fonts"
+
+        font_path = os.path.join(font_dir, "NanumGothic.ttf")
+        font_url = "https://raw.githubusercontent.com/kairess/better-data-visualization/master/NanumGothic.ttf"
+
+        os.makedirs(font_dir, exist_ok=True)
+
+        if not os.path.exists(font_path):
+            urllib.request.urlretrieve(font_url, font_path)
+            st.write("✅ 나눔고딕 폰트 다운로드 완료")
+
+        # matplotlib에 폰트 등록
+        fm.fontManager.addfont(font_path)
+        plt.rcParams["font.family"] = "NanumGothic"
+        plt.rcParams["axes.unicode_minus"] = False
+
+        return font_path
+
+    except Exception as e:
+        st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
+        return None
+
 # 폰트 설정 실행
-font_path = setup_korean_font()
+font_path = setup_korean_font_test()
 
 import pandas as pd
 import numpy as np
