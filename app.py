@@ -40,72 +40,9 @@ brand_mapping = {
     'TM': '티엠씨엘에프',
     'TV': 'TOVICA',
     'TY': '도요타'
-}
+} 
 
-# 한글 폰트 설정 함수
-# def setup_korean_font():
-#     try:
-#         # 폰트 저장 경로 설정
-#         font_dir = '/tmp/fonts/'
-#         font_path = os.path.join(font_dir, 'NanumGothic.ttf')
-#         font_url = 'https://raw.githubusercontent.com/kairess/better-data-visualization/master/NanumGothic.ttf'
-
-#         # 폴더가 없으면 생성
-#         os.makedirs(font_dir, exist_ok=True)
-
-#         # 폰트가 없으면 다운로드
-#         if not os.path.exists(font_path):
-#             urllib.request.urlretrieve(font_url, font_path)
-#             st.write("✅ 나눔고딕 폰트 다운로드 완료")
-
-#         # matplotlib에 폰트 등록
-#         fm.fontManager.addfont(font_path)
-#         plt.rcParams['font.family'] = 'NanumGothic'
-#         plt.rcParams['axes.unicode_minus'] = False
-
-#         return font_path
-
-#     except Exception as e:
-#         st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
-#         return None
-
-
-def setup_korean_font_test(dummy_mode=True):
-    system = platform.system()
-    font_path = None  # 기본값
-
-    try:
-        if system == "Windows":
-            mpl.rcParams["font.family"] = "Malgun Gothic"
-        elif system == "Darwin":
-            mpl.rcParams["font.family"] = "AppleGothic"
-        else:  # Linux (Streamlit Cloud 등)
-            if dummy_mode:
-                st.warning("📎 더미 폰트 경로 사용 중 (폰트 다운로드 생략됨)")
-                font_path = "/tmp/DUMMY.ttf"  # 더미 값 반환
-                mpl.rcParams["font.family"] = "DejaVu Sans"
-            else:
-                font_dir = "/tmp/fonts"
-                font_path = os.path.join(font_dir, "NanumGothic.ttf")
-                font_url = "https://github.com/naver/nanumfont/blob/master/TTF/NanumGothic.ttf?raw=true"
-
-                os.makedirs(font_dir, exist_ok=True)
-
-                if not os.path.exists(font_path):
-                    urllib.request.urlretrieve(font_url, font_path)
-                    st.info("폰트 다운로드 완료")
-
-                fm.fontManager.addfont(font_path)
-                mpl.rcParams["font.family"] = "NanumGothic"
-
-        mpl.rcParams["axes.unicode_minus"] = False
-        return font_path
-
-    except Exception as e:
-        st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
-        return "/tmp/ERROR.ttf"  # 오류 시에도 더미 반환
-    
-def set_cross_platform_korean_font():
+def setup_korean_font_test():
     # 1. 프로젝트 내 포함된 폰트 우선 적용
     font_path = os.path.join("fonts", "NanumGothic.ttf")
     
@@ -135,6 +72,7 @@ def set_cross_platform_korean_font():
 
     mpl.rcParams["axes.unicode_minus"] = False
     return None  # fallback일 경우 경로 반환 안 함
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -159,23 +97,11 @@ import requests
 import subprocess
 
 # 폰트 설정 실행
-font_path = set_cross_platform_korean_font()
-
+font_path = setup_korean_font_test()
 # 이후 코드에서 사용 가능
 if font_path and os.path.exists(font_path):
     fm.fontManager.addfont(font_path)
-
-fig, ax = plt.subplots()
-ax.set_title("한글 테스트: 지역별 고장 건수")
-ax.plot([1, 2, 3], [4, 5, 6])
-st.pyplot(fig)
-
-
-fig, ax = plt.subplots()
-ax.set_title("English Title Only")
-ax.plot([1, 2, 3], [4, 5, 6])
-st.pyplot(fig)
-
+ 
 # 그래프 다운로드 기능 추가
 def get_image_download_link(fig, filename, text):
     """그래프를 이미지로 변환하고 다운로드 링크 생성"""
@@ -186,39 +112,39 @@ def get_image_download_link(fig, filename, text):
     href = f'<a href="data:image/png;base64,{b64}" download="{filename}"> {text}</a>'
     return href
 
-def create_figure_with_korean(figsize=(10, 6), dpi=300):
-    """OS 환경에 따라 한글 폰트를 강제 적용한 figure 생성 함수"""
-    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
-
-    system = platform.system() 
-    if system == "Windows":
-        mpl.rcParams["font.family"] = "Malgun Gothic"
-    elif system == "Darwin":
-        mpl.rcParams["font.family"] = "AppleGothic"
-    else:  # Linux / Streamlit Cloud
-        fallback_fonts = ["Noto Sans CJK KR", "NanumGothic", "Droid Sans Fallback", "UnDotum", "Liberation Sans", "DejaVu Sans"]
-        available_fonts = set(f.name for f in fm.fontManager.ttflist)
-        matched = next((font for font in fallback_fonts if font in available_fonts), None)
-
-        if matched:
-            mpl.rcParams["font.family"] = matched
-        else:
-            mpl.rcParams["font.family"] = "sans-serif"  # fallback
-            print("⚠️ 경고: 한글 폰트를 찾을 수 없어 sans-serif로 대체합니다.")
-
-    mpl.rcParams["axes.unicode_minus"] = False
-
-    return fig, ax
 # def create_figure_with_korean(figsize=(10, 6), dpi=300):
-#     """한글 폰트가 적용된 그림 객체 생성""" 
+#     """OS 환경에 따라 한글 폰트를 강제 적용한 figure 생성 함수"""
 #     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
-    
-#     # 그림마다 폰트 설정 적용
-#     if font_path and os.path.exists(font_path):
-#         plt.rcParams['font.family'] = 'NanumGothic'
-#         plt.rcParams['axes.unicode_minus'] = False
-    
+
+#     system = platform.system() 
+#     if system == "Windows":
+#         mpl.rcParams["font.family"] = "Malgun Gothic"
+#     elif system == "Darwin":
+#         mpl.rcParams["font.family"] = "AppleGothic"
+#     else:  # Linux / Streamlit Cloud
+#         fallback_fonts = ["Noto Sans CJK KR", "NanumGothic", "Droid Sans Fallback", "UnDotum", "Liberation Sans", "DejaVu Sans"]
+#         available_fonts = set(f.name for f in fm.fontManager.ttflist)
+#         matched = next((font for font in fallback_fonts if font in available_fonts), None)
+
+#         if matched:
+#             mpl.rcParams["font.family"] = matched
+#         else:
+#             mpl.rcParams["font.family"] = "sans-serif"  # fallback
+#             print("⚠️ 경고: 한글 폰트를 찾을 수 없어 sans-serif로 대체합니다.")
+
+#     mpl.rcParams["axes.unicode_minus"] = False
+
 #     return fig, ax
+def create_figure_with_korean(figsize=(10, 6), dpi=300):
+    """한글 폰트가 적용된 그림 객체 생성""" 
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    
+    # # 그림마다 폰트 설정 적용
+    # if font_path and os.path.exists(font_path):
+    #     plt.rcParams['font.family'] = 'NanumGothic'
+    #     plt.rcParams['axes.unicode_minus'] = False
+    
+    return fig, ax
 
 # 메뉴별 색상 테마 설정
 color_themes = {
