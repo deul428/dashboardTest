@@ -183,13 +183,20 @@ def get_image_download_link(fig, filename, text):
 def create_figure_with_korean(figsize=(10, 6), dpi=300):
     """한글 폰트가 적용된 그림 객체 생성"""
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
-    
-    # 그림마다 폰트 설정 적용
-    if font_path and os.path.exists(font_path):
-        plt.rcParams['font.family'] = 'NanumGothic'
-        plt.rcParams['axes.unicode_minus'] = False
-    
+
+    # ✅ 항상 설정 (font_path 존재 여부와 무관하게)
+    plt.rcParams['font.family'] = mpl.rcParams['font.family']
+    plt.rcParams['axes.unicode_minus'] = False
+
     return fig, ax
+    # fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    
+    # # 그림마다 폰트 설정 적용
+    # if font_path and os.path.exists(font_path):
+    #     plt.rcParams['font.family'] = 'NanumGothic'
+    #     plt.rcParams['axes.unicode_minus'] = False
+    
+    # return fig, ax
 
 # 메뉴별 색상 테마 설정
 color_themes = {
