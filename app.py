@@ -85,7 +85,10 @@ def setup_korean_font_test():
 
 # 폰트 설정 실행
 font_path = setup_korean_font_test()
-
+fig, ax = plt.subplots()
+ax.set_title("한글 테스트: 지역별 고장 건수")
+ax.plot([1, 2, 3], [4, 5, 6])
+st.pyplot(fig)
 import pandas as pd
 import numpy as np
 import seaborn as sns
