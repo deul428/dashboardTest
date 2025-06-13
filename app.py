@@ -105,39 +105,36 @@ def setup_korean_font_test(dummy_mode=True):
         st.error(f"❌ 폰트 설정 중 오류 발생: {str(e)}")
         return "/tmp/ERROR.ttf"  # 오류 시에도 더미 반환
     
-    
 def set_cross_platform_korean_font():
-    import os
-
-    # 경로는 Streamlit Cloud에서도 작동하도록 상대경로 사용
+    # 1. 프로젝트 내 포함된 폰트 우선 적용
     font_path = os.path.join("fonts", "NanumGothic.ttf")
-
+    
     if os.path.exists(font_path):
         fm.fontManager.addfont(font_path)
         mpl.rcParams["font.family"] = "NanumGothic"
         st.info("✅ NanumGothic.ttf 폰트를 직접 등록하여 사용합니다.")
+        return font_path
+
+    # 2. 시스템별 fallback (폰트가 없을 경우)
+    system = platform.system()
+    if system == "Windows":
+        mpl.rcParams["font.family"] = "Malgun Gothic"
+    elif system == "Darwin":
+        mpl.rcParams["font.family"] = "AppleGothic"
     else:
-        # 이전 방식 유지
-        system = platform.system()
+        fallback_fonts = ["Noto Sans CJK KR", "NanumGothic", "Droid Sans Fallback", "UnDotum", "Liberation Sans"]
+        available_fonts = set(f.name for f in fm.fontManager.ttflist)
+        matched = next((font for font in fallback_fonts if font in available_fonts), None)
 
-        if system == "Windows":
-            mpl.rcParams["font.family"] = "Malgun Gothic"
-        elif system == "Darwin":
-            mpl.rcParams["font.family"] = "AppleGothic"
-        else:  # Linux / Streamlit Cloud
-            fallback_fonts = ["Noto Sans CJK KR", "NanumGothic", "Droid Sans Fallback", "UnDotum", "Liberation Sans"]
-            available_fonts = set(f.name for f in fm.fontManager.ttflist)
-            matched = next((font for font in fallback_fonts if font in available_fonts), None)
-
-            if matched:
-                mpl.rcParams["font.family"] = matched
-                st.info(f"✅ 시스템에서 발견된 한글 폰트 사용: {matched}")
-            else:
-                mpl.rcParams["font.family"] = "sans-serif"
-                st.warning("⚠️ 한글 폰트가 시스템에 없어 기본 폰트로 대체됩니다. (한글 깨질 수 있음)")
+        if matched:
+            mpl.rcParams["font.family"] = matched
+            st.info(f"✅ 시스템에서 발견된 한글 폰트 사용: {matched}")
+        else:
+            mpl.rcParams["font.family"] = "sans-serif"
+            st.warning("⚠️ 한글 폰트가 시스템에 없어 기본 폰트로 대체됩니다. (한글 깨질 수 있음)")
 
     mpl.rcParams["axes.unicode_minus"] = False
-
+    return None  # fallback일 경우 경로 반환 안 함
 import pandas as pd
 import numpy as np
 import seaborn as sns
